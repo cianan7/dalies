@@ -1,39 +1,294 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Daily Games</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Daily Games</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        color: white;
+        background:
+            radial-gradient(circle at 20% 20%, rgba(120, 70, 255, 0.15), transparent 35%),
+            radial-gradient(circle at 80% 80%, rgba(0, 200, 255, 0.12), transparent 35%),
+            #07070b;
+        overflow-x: hidden;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+        background-size: 45px 45px;
+        pointer-events: none;
+        mask-image: linear-gradient(to bottom, black, transparent);
+    }
+
+    .container {
+        width: min(1100px, 92%);
+        margin: auto;
+        padding: 70px 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero {
+        text-align: center;
+        margin-bottom: 55px;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 7px 14px;
+        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.05);
+        border-radius: 999px;
+        font-size: 12px;
+        letter-spacing: 2px;
+        color: #aaa;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+    }
+
+    h1 {
+        font-size: clamp(45px, 8vw, 85px);
+        font-weight: 900;
+        letter-spacing: -5px;
+        line-height: 0.95;
+        background: linear-gradient(90deg, #ffffff, #a78bfa, #60a5fa);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .subtitle {
+        margin-top: 20px;
+        color: #8c8c98;
+        font-size: 16px;
+    }
+
+    .open-all {
+        margin-top: 32px;
+        padding: 17px 42px;
+        border: none;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        color: white;
+        cursor: pointer;
+        background: linear-gradient(135deg, #7c3aed, #2563eb);
+        box-shadow:
+            0 10px 35px rgba(99, 60, 220, 0.35),
+            inset 0 1px rgba(255,255,255,0.25);
+        transition: 0.2s ease;
+    }
+
+    .open-all:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow:
+            0 15px 45px rgba(99, 60, 220, 0.5),
+            inset 0 1px rgba(255,255,255,0.3);
+    }
+
+    .open-all:active {
+        transform: scale(0.98);
+    }
+
+    .games {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 18px;
+    }
+
+    .game {
+        position: relative;
+        padding: 26px;
+        min-height: 180px;
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 18px;
+        background: rgba(255,255,255,0.035);
+        backdrop-filter: blur(15px);
+        overflow: hidden;
+        transition: 0.25s ease;
+    }
+
+    .game::before {
+        content: "";
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        right: -80px;
+        top: -80px;
+        background: rgba(124,58,237,0.18);
+        filter: blur(45px);
+        border-radius: 50%;
+    }
+
+    .game:hover {
+        transform: translateY(-5px);
+        border-color: rgba(167,139,250,0.35);
+        background: rgba(255,255,255,0.055);
+    }
+
+    .number {
+        color: #777;
+        font-size: 12px;
+        font-weight: bold;
+        letter-spacing: 2px;
+    }
+
+    .game h2 {
+        margin-top: 12px;
+        font-size: 25px;
+        position: relative;
+    }
+
+    .game p {
+        color: #888895;
+        font-size: 13px;
+        margin-top: 8px;
+        line-height: 1.5;
+    }
+
+    .open {
+        margin-top: 22px;
+        width: 100%;
+        padding: 11px;
+        border-radius: 9px;
+        border: 1px solid rgba(255,255,255,0.1);
+        background: rgba(255,255,255,0.06);
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .open:hover {
+        background: rgba(255,255,255,0.12);
+        border-color: rgba(255,255,255,0.2);
+    }
+
+    footer {
+        text-align: center;
+        margin-top: 55px;
+        color: #555560;
+        font-size: 12px;
+    }
+
+    @media (max-width: 600px) {
+        .container {
+            padding: 45px 0;
+        }
+
+        h1 {
+            letter-spacing: -3px;
+        }
+    }
+</style>
 </head>
+
 <body>
 
-<h1>🎮 Daily Games</h1>
+<div class="container">
 
-<button onclick="openAll()">🚀 OPEN ALL</button>
+    <section class="hero">
+
+        <div class="badge">Daily Games</div>
+
+        <h1>PLAY.<br>EVERY DAY.</h1>
+
+        <p class="subtitle">
+            Your daily collection of games, all in one place.
+        </p>
+
+        <button class="open-all" onclick="openAll()">
+            ⚡ OPEN ALL GAMES
+        </button>
+
+    </section>
+
+
+    <section class="games">
+
+        <div class="game">
+            <div class="number">GAME 01</div>
+            <h2>Episode</h2>
+            <p>Test your knowledge and solve today's challenge.</p>
+
+            <button class="open" onclick="openGame('https://episode.wtf/')">
+                OPEN GAME →
+            </button>
+        </div>
+
+
+        <div class="game">
+            <div class="number">GAME 02</div>
+            <h2>Framed</h2>
+            <p>Identify the movie from a single frame.</p>
+
+            <button class="open" onclick="openGame('https://framed.wtf/')">
+                OPEN GAME →
+            </button>
+        </div>
+
+
+        <div class="game">
+            <div class="number">GAME 03</div>
+            <h2>Flickle</h2>
+            <p>Find the movie and put your film knowledge to the test.</p>
+
+            <button class="open" onclick="openGame('https://flickle.app/archive?page=38')">
+                OPEN GAME →
+            </button>
+        </div>
+
+    </section>
+
+
+    <footer>
+        DAILY GAMES • COME BACK TOMORROW
+    </footer>
+
+</div>
+
 
 <script>
+
 const games = [
     "https://episode.wtf/",
     "https://framed.wtf/",
-    "https://flickle.app/archive?page=38",
-    "https://loldle.net/",
-    "https://www.flagle.io/",
-    "https://globle-game.com/",
-    "https://worldle.teuteuf.fr/",
-    "https://wheretaken.teuteuf.fr/",
-    "https://travle.earth/",
-    "https://lessgames.com/",
-    "https://bandle.app/menu",
-    "https://rock.heardledecades.com/",
-    "https://10s.heardledecades.com/",
-    "https://www.tastedtracks.com/game",
-    "https://betweenle.com/",
-    "https://www.gamedle.wtf/",
-    "https://guessthe.game/",
-    "https://pokedle.com/image-zoom"
+    "https://flickle.app/archive?page=38"
 ];
 
-function openAll() {
-    games.forEach(link => window.open(link, "_blank"));
+function openGame(url) {
+    window.open(url, "_blank");
 }
+
+function openAll() {
+
+    games.forEach((url, index) => {
+
+        setTimeout(() => {
+            window.open(url, "_blank");
+        }, index * 150);
+
+    });
+
+}
+
 </script>
 
 </body>
